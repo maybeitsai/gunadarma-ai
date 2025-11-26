@@ -1,0 +1,9 @@
+[submodule "backend"]
+	path = backend
+	url = https://github.com/username/chatbot-rag-gunadarma-backend
+[submodule "frontend-chainlit"]
+	path = frontend-chainlit
+	url = https://github.com/username/chatbot-rag-gunadarma-frontend
+[submodule "frontend-react"]
+	path = frontend-react
+	url = https://github.com/username/client-gunadarma-ai
