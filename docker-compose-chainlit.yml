@@ -1,0 +1,45 @@
+services:
+  backend:
+    image: maybeitsai/chatbot-rag-gunadarma-backend:latest
+    container_name: chatbot-rag-backend-container
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend/cache:/app/cache
+      - ./backend/logs:/app/logs
+    networks:
+      - chatbot-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    image: maybeitsai/chatbot-rag-gunadarma-frontend:latest
+    container_name: chatbot-rag-frontend-container
+    restart: unless-stopped
+    env_file:
+      - ./frontend-chainlit/.env
+    ports:
+      - "8080:8080"
+    networks:
+      - chatbot-network
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  chatbot-network:
+    driver: bridge
